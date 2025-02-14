@@ -56,7 +56,7 @@ def split_images_in_folder(input_folder, output_folder, target_size=(640, 640)):
                 print(f"Skipping {filename}: {e}")
 
 
-input_folder = r'D:\sherkat\dataset\images\resize\input'  
-output_folder = r'D:\sherkat\dataset\images\resize\output'  
+input_folder = r'D:\sherkat\dataset\images\circles\final'  
+output_folder = r'D:\sherkat\dataset\images\circles\resize'  
 
 split_images_in_folder(input_folder, output_folder)
