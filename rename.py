@@ -1,6 +1,6 @@
 import os
 
-def rename_images(input_folder, output_folder, prefix="square"):
+def rename_images(input_folder, output_folder, prefix="almond_shell"):
     
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
@@ -25,8 +25,8 @@ def rename_images(input_folder, output_folder, prefix="square"):
             counter += 1
 
 
-input_folder = r'D:\sherkat\dataset\images\circles\final\output'  
-output_folder = r'D:\sherkat\dataset\images\circles\rename'  
-prefix = "circle"  
+input_folder = r'/home/basa/Documents/GitHub/Almond-Skin-Detection/Almond'  
+output_folder = r'/home/basa/Documents/GitHub/Almond-Skin-Detection/Almond'  
+prefix = "almond_shell"  
 
 rename_images(input_folder, output_folder, prefix=prefix)

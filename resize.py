@@ -1,62 +1,30 @@
-import cv2
+from PIL import Image
 import os
 
-def split_image(image, target_size=(640, 640)):
-    h, w, _ = image.shape
-
-    
-    if w >= target_size[0] * 2:
-       
-        left_part = image[:, :target_size[0]]  
-        right_part = image[:, target_size[0]:target_size[0]*2]  
-        
-        
-        left_part = left_part[:target_size[1], :]
-        right_part = right_part[:target_size[1], :]
-        
-        return left_part, right_part
-    elif h >= target_size[1] * 2:
-        
-        top_part = image[:target_size[1], :]  
-        bottom_part = image[target_size[1]:target_size[1]*2, :]  
-        
-        
-        top_part = top_part[:, :target_size[0]]
-        bottom_part = bottom_part[:, :target_size[0]]
-        
-        return top_part, bottom_part
-    else:
-        raise ValueError("Image is too small to split into two 640x640 sections.")
-
-def split_images_in_folder(input_folder, output_folder, target_size=(640, 640)):
-    
+def resize_images_in_folder(input_folder, output_folder, size=(640, 640)):
     if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
-    
-    
+        os.makedirs(output_folder)  # ساخت پوشه‌ی خروجی در صورت عدم وجود
+
     for filename in os.listdir(input_folder):
-        if filename.endswith(".jpg") or filename.endswith(".png"):  
-            image_path = os.path.join(input_folder, filename)
-            image = cv2.imread(image_path)
+        if filename.lower().endswith(('.png', '.jpg', '.jpeg')):  # بررسی فرمت‌های تصویر
+            input_path = os.path.join(input_folder, filename)
+            output_path = os.path.join(output_folder, filename)
 
-            try:
-                
-                left_part, right_part = split_image(image, target_size)
+            img = Image.open(input_path)
+            img.thumbnail(size, Image.LANCZOS)  # حفظ کیفیت و نسبت تصویر
 
-                
-                left_filename = f"left_{filename}"
-                right_filename = f"right_{filename}"
+            # ایجاد پس‌زمینه سفید
+            canvas = Image.new("RGB", size, (255, 255, 255))
+            x_offset = (size[0] - img.size[0]) // 2
+            y_offset = (size[1] - img.size[1]) // 2
+            canvas.paste(img, (x_offset, y_offset))
 
-                cv2.imwrite(os.path.join(output_folder, left_filename), left_part)
-                cv2.imwrite(os.path.join(output_folder, right_filename), right_part)
+            canvas.save(output_path, quality=95)  # ذخیره تصویر با کیفیت بالا
 
-                print(f"Split and saved: {left_filename}, {right_filename}")
+    print("✅ تمام تصاویر با موفقیت تغییر اندازه داده شدند.")
 
-            except ValueError as e:
-                print(f"Skipping {filename}: {e}")
+# مسیر فولدر ورودی و خروجی
+input_folder = "/home/basa/Documents/GitHub/Almond-Skin-Detection/Almond"   # فولدری که تصاویر اصلی داخل آن هستند
+output_folder = "/home/basa/Documents/GitHub/Almond-Skin-Detection/test"  # فولدر ذخیره‌ی تصاویر تغییر اندازه داده‌شده
 
-
-input_folder = r'D:\sherkat\dataset\images\circles\final'  
-output_folder = r'D:\sherkat\dataset\images\circles\resize'  
-
-split_images_in_folder(input_folder, output_folder)
+resize_images_in_folder(input_folder, output_folder)
